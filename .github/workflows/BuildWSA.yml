@@ -1,0 +1,73 @@
+name: Build WSA
+on:
+  workflow_dispatch:
+    inputs:
+      arch:
+        description: "Build arch"
+        required: true
+        default: "x64"
+        type: choice
+        options:
+        - x64
+        - arm64
+      release_type:
+        description: "WSA release type"
+        required: true
+        default: "RP"
+        type: choice
+        options:
+        - retail
+        - RP
+        - WIS
+        - WIF
+      gapps_brand:
+        description: "GApps brand"
+        required: true
+        default: "MindTheGapps"
+        type: choice
+        options:
+        - MindTheGapps
+        - none
+      root_sol:
+        description: "Root solution"
+        required: true
+        default: "magisk"
+        type: choice
+        options:
+        - magisk
+        - kernelsu
+        - none
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Dependencies
+        run: |
+          cd /opt
+          git clone https://github.com/LSPosed/MagiskOnWSALocal.git
+          cd /opt/MagiskOnWSALocal/scripts
+          ./install_deps.sh
+      - name: Build WSA
+        run: |
+          cd /opt/MagiskOnWSALocal/scripts
+          ./build.sh --arch ${{ github.event.inputs.arch }} --release-type ${{ github.event.inputs.release_type }} --root-sol ${{ github.event.inputs.root_sol }} --gapps-brand ${{ github.event.inputs.gapps_brand }} --remove-amazon --compress
+          file=/opt/MagiskOnWSALocal/output/*.7z
+          name=$(basename $file .7z)
+          name1=${name#*_}
+          name2=${name1%%_*}
+          echo "artifact_name=$name" >> $GITHUB_ENV
+          echo "wsa_version=$name2" >> $GITHUB_ENV
+      #- name: Upload WSA
+      #  uses: actions/upload-artifact@v3
+      #  with:
+      #    name: ${{ env.artifact_name }}
+      #    path: "/opt/MagiskOnWSALocal/output/${{ env.artifact_name }}.7z"
+      - name: Upload WSA to release
+        uses: ncipollo/release-action@v1
+        with:
+          name: ${{ env.artifact_name }}
+          artifacts: /opt/MagiskOnWSALocal/output/${{ env.artifact_name }}.7z
+          allowUpdates: true
+          tag: ${{ env.wsa_version }}
+          token: ${{ secrets.GITHUB_TOKEN }}
