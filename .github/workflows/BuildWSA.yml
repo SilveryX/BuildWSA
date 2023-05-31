@@ -51,7 +51,7 @@ jobs:
       - name: Build WSA
         run: |
           cd /opt/MagiskOnWSALocal/scripts
-          sudo ./build.sh --arch ${{ github.event.inputs.arch }} --release-type ${{ github.event.inputs.release_type }} --root-sol ${{ github.event.inputs.root_sol }} --gapps-brand ${{ github.event.inputs.gapps_brand }} --remove-amazon --compress
+          bash build.sh --arch ${{ github.event.inputs.arch }} --release-type ${{ github.event.inputs.release_type }} --root-sol ${{ github.event.inputs.root_sol }} --gapps-brand ${{ github.event.inputs.gapps_brand }} --remove-amazon --compress
           file=/opt/MagiskOnWSALocal/output/*.7z
           name=$(basename $file .7z)
           name1=${name#*_}
