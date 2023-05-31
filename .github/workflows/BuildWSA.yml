@@ -44,15 +44,14 @@ jobs:
     steps:
       - name: Dependencies
         run: |
-          apt install sudo -y
           cd /opt
           git clone https://github.com/LSPosed/MagiskOnWSALocal.git
           cd /opt/MagiskOnWSALocal/scripts
-          ./install_deps.sh
+          sudo ./install_deps.sh
       - name: Build WSA
         run: |
           cd /opt/MagiskOnWSALocal/scripts
-          ./build.sh --arch ${{ github.event.inputs.arch }} --release-type ${{ github.event.inputs.release_type }} --root-sol ${{ github.event.inputs.root_sol }} --gapps-brand ${{ github.event.inputs.gapps_brand }} --remove-amazon --compress
+          sudo ./build.sh --arch ${{ github.event.inputs.arch }} --release-type ${{ github.event.inputs.release_type }} --root-sol ${{ github.event.inputs.root_sol }} --gapps-brand ${{ github.event.inputs.gapps_brand }} --remove-amazon --compress
           file=/opt/MagiskOnWSALocal/output/*.7z
           name=$(basename $file .7z)
           name1=${name#*_}
