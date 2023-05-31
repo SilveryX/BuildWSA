@@ -44,6 +44,7 @@ jobs:
     steps:
       - name: Dependencies
         run: |
+          apt install sudo -y
           cd /opt
           git clone https://github.com/LSPosed/MagiskOnWSALocal.git
           cd /opt/MagiskOnWSALocal/scripts
