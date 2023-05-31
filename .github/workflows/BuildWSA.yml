@@ -31,11 +31,11 @@ on:
       root_sol:
         description: "Root solution"
         required: true
-        default: "magisk"
+        default: "kernelsu"
         type: choice
         options:
-        - magisk
         - kernelsu
+        - magisk
         - none
 
 jobs:
